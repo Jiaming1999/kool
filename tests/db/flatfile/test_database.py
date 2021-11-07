@@ -3,13 +3,14 @@ import pytest
 
 from kool.db.flatfile import FlatFileDB, Table, where
 
-TESTS_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TESTS_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 
 class TestFlatFile(object):
 
     @classmethod
-    def setup_class(cls):
+    def setup_method(cls):
         testdb = os.path.join(TESTS_DIR, 'fixtures')
         cls.db = FlatFileDB(path=testdb)
         cls.db.purge_table('.meta')
@@ -51,6 +52,9 @@ class TestFlatFile(object):
         assert isinstance(table, Table)
 
     def test_tables(self):
+        self.db.create_table('table1')
+        self.db.create_table('table2')
+        self.db.create_table('table3')
         assert len(self.db.tables()) == 3
         assert isinstance(self.db.tables()[0], Table)
 
@@ -69,4 +73,4 @@ class TestFlatFile(object):
         assert table.get(rid=2)['char'] == 'b'
         assert table.get(cond=(where('char') == 'a'))['int'] == '1'
         table.purge()
-        assert len(table) == 0        
+        assert len(table) == 0
