@@ -4,11 +4,12 @@ from .quiz import Quiz
 
 class Question(Model):
     """Question model provides a set of questions for a quiz.
-    
+
     Extends:
         Model
 
     """
+
     def __init__(self, description, quiz_id, **options):
         super().__init__()
         self.description = description
@@ -33,7 +34,7 @@ class Question(Model):
 
     def add_choices(self, choices, correct_answers):
         """Adds a list of choices to a choices dictionary
-        
+
         Keyword Arguments:
             choices {list} -- a list of choices (default: {[]})
             correct_answers {list} -- a list of correct answers (default: {[]})
@@ -43,7 +44,8 @@ class Question(Model):
 
         """
         if not (isinstance(choices, list) and isinstance(correct_answers, list)):
-            raise ValueError('Choices and correct answers must be provided in a list!')
+            raise ValueError(
+                'Choices and correct answers must be provided in a list!')
 
         for index, choice in enumerate(choices, 1):
             self.choices[index] = choice
@@ -51,9 +53,10 @@ class Question(Model):
                 if str(answer).lower() == str(choice).lower():
                     if not answer in self.correct_answers:
                         self.correct_answers.append((index, answer))
+                    self.correct_answers = list(set(self.correct_answers))
 
         self.update()
-        
+
         return self.choices
 
     def add_answers(self, answer):
